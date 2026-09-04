@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Student Registration</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Inter, Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: #f4f7fb;
+      color: #172033;
+    }
+
+    /* ================= HEADER ================= */
+
+    header {
+      background: #ffffff;
+      border-bottom: 1px solid #e8ebf0;
+      padding: 18px 6%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .logo-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #4f46e5;
+      color: white;
+      font-size: 21px;
+    }
+
+    .header-badge {
+      background: #eef2ff;
+      color: #4f46e5;
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    /* ================= HERO ================= */
+
+    .hero {
+      max-width: 1100px;
+      margin: 45px auto 25px;
+      padding: 0 20px;
+    }
+
+    .hero h1 {
+      font-size: 38px;
+      margin-bottom: 8px;
+    }
+
+    .hero p {
+      color: #697386;
+      font-size: 16px;
+    }
+
+    /* ================= FORM CARD ================= */
+
+    .form-wrapper {
+      max-width: 1100px;
+      margin: auto;
+      padding: 0 20px 50px;
+    }
+
+    .form-card {
+      background: white;
+      border-radius: 22px;
+      padding: 35px;
+      box-shadow: 0 15px 45px rgba(31, 41, 55, 0.07);
+      border: 1px solid #edf0f4;
+    }
+
+    .section {
+      margin-bottom: 35px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .section-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: #eef2ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .section-header h2 {
+      font-size: 19px;
+    }
+
+    .section-header p {
+      color: #8992a3;
+      font-size: 13px;
+      margin-top: 3px;
+    }
+
+    /* ================= GRID ================= */
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    /* ================= INPUTS ================= */
+
+    .field label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #374151;
+    }
+
+    .required {
+      color: #ef4444;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid #dfe3ea;
+      background: #fbfcfe;
+      border-radius: 11px;
+      padding: 14px 15px;
+      font-size: 15px;
+      color: #172033;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    input:hover,
+    select:hover,
+    textarea:hover {
+      border-color: #b9c0cc;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #6366f1;
+      background: white;
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.10);
+    }
+
+    textarea {
+      min-height: 115px;
+      resize: vertical;
+    }
+
+    /* ================= GENDER ================= */
+
+    .gender-list {
+      display: flex;
+      gap: 12px;
+    }
+
+    .gender-item {
+      flex: 1;
+      position: relative;
+    }
+
+    .gender-item input {
+      position: absolute;
+      opacity: 0;
+    }
+
+    .gender-item label {
+      display: block;
+      text-align: center;
+      padding: 13px;
+      border: 1px solid #dfe3ea;
+      border-radius: 11px;
+      cursor: pointer;
+      background: #fbfcfe;
+      transition: 0.2s;
+    }
+
+    .gender-item input:checked + label {
+      border-color: #6366f1;
+      background: #eef2ff;
+      color: #4f46e5;
+      font-weight: 700;
+    }
+
+    /* ================= HOBBIES ================= */
+
+    .hobbies {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .hobby {
+      position: relative;
+    }
+
+    .hobby input {
+      position: absolute;
+      opacity: 0;
+    }
+
+    .hobby label {
+      display: block;
+      text-align: center;
+      padding: 14px 8px;
+      border: 1px solid #dfe3ea;
+      border-radius: 11px;
+      cursor: pointer;
+      background: #fbfcfe;
+      font-size: 14px;
+      transition: 0.2s;
+    }
+
+    .hobby input:checked + label {
+      background: #eef2ff;
+      border-color: #6366f1;
+      color: #4f46e5;
+      font-weight: 700;
+    }
+
+    .other-hobby {
+      margin-top: 15px;
+    }
+
+    /* ================= BUTTON ================= */
+
+    .submit-area {
+      border-top: 1px solid #edf0f4;
+      padding-top: 25px;
+    }
+
+    button {
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      padding: 16px;
+      background: #4f46e5;
+      color: white;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background: #4338ca;
+      transform: translateY(-1px);
+    }
+
+    button:disabled {
+      background: #a5a8b5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ================= MESSAGE ================= */
+
+    #message {
+      display: none;
+      margin-top: 18px;
+      padding: 14px;
+      border-radius: 11px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .success {
+      display: block !important;
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .error {
+      display: block !important;
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    /* ================= FOOTER ================= */
+
+    footer {
+      text-align: center;
+      color: #8b93a3;
+      font-size: 13px;
+      padding: 25px;
+    }
+
+    /* ================= MOBILE ================= */
+
+    @media (max-width: 700px) {
+
+      header {
+        padding: 15px 20px;
+      }
+
+      .header-badge {
+        display: none;
+      }
+
+      .hero {
+        margin-top: 30px;
+      }
+
+      .hero h1 {
+        font-size: 29px;
+      }
+
+      .form-card {
+        padding: 22px;
+        border-radius: 17px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .full {
+        grid-column: auto;
+      }
+
+      .hobbies {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .gender-list {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+
+<header>
+
+  <div class="logo">
+    <div class="logo-icon">🎓</div>
+    <span>Student Portal</span>
+  </div>
+
+  <div class="header-badge">
+    Student Registration
+  </div>
+
+</header>
+
+
+<!-- ================= HERO ================= -->
+
+<section class="hero">
+
+  <h1>Student Registration</h1>
+
+  <p>
+    Please enter your details carefully to complete your registration.
+  </p>
+
+</section>
+
+
+<!-- ================= FORM ================= -->
+
+<div class="form-wrapper">
+
+  <div class="form-card">
+
+    <form id="studentForm">
+
+
+      <!-- PERSONAL DETAILS -->
+
+      <div class="section">
+
+        <div class="section-header">
+
+          <div class="section-icon">
+            👤
+          </div>
+
+          <div>
+            <h2>Personal Details</h2>
+            <p>Basic information about the student</p>
+          </div>
+
+        </div>
+
+
+        <div class="grid">
+
+
+          <!-- NAME -->
+
+          <div class="field full">
+
+            <label>
+              Student Name
+              <span class="required">*</span>
+            </label>
+
+            <input
+              type="text"
+              id="student_name"
+              placeholder="Enter full name"
+              required
+            >
+
+          </div>
+
+
+          <!-- STD -->
+
+          <div class="field">
+
+            <label>
+              Standard
+              <span class="required">*</span>
+            </label>
+
+            <select id="standard" required>
+
+              <option value="">
+                Select Standard
+              </option>
+
+              <option value="8">8th</option>
+              <option value="9">9th</option>
+              <option value="10">10th</option>
+              <option value="11">11th</option>
+              <option value="12">12th</option>
+
+            </select>
+
+          </div>
+
+
+          <!-- DIVISION -->
+
+          <div class="field">
+
+            <label>
+              Division
+              <span class="required">*</span>
+            </label>
+
+            <input
+              type="text"
+              id="division"
+              placeholder="Example: A"
+              required
+            >
+
+          </div>
+
+
+          <!-- GENDER -->
+
+          <div class="field">
+
+            <label>Gender</label>
+
+            <div class="gender-list">
+
+              <div class="gender-item">
+
+                <input
+                  type="radio"
+                  id="male"
+                  name="gender"
+                  value="Male"
+                >
+
+                <label for="male">
+                  👨 Male
+                </label>
+
+              </div>
+
+
+              <div class="gender-item">
+
+                <input
+                  type="radio"
+                  id="female"
+                  name="gender"
+                  value="Female"
+                >
+
+                <label for="female">
+                  👩 Female
+                </label>
+
+              </div>
+
+
+              <div class="gender-item">
+
+                <input
+                  type="radio"
+                  id="prefer"
+                  name="gender"
+                  value="Prefer not to say"
+                >
+
+                <label for="prefer">
+                  Prefer not
+                </label>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- DOB -->
+
+          <div class="field">
+
+            <label>Date of Birth</label>
+
+            <input
+              type="date"
+              id="date_of_birth"
+            >
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- CONTACT DETAILS -->
+
+      <div class="section">
+
+        <div class="section-header">
+
+          <div class="section-icon">
+            📞
+          </div>
+
+          <div>
+            <h2>Contact Details</h2>
+            <p>How we can contact the student</p>
+          </div>
+
+        </div>
+
+
+        <div class="grid">
+
+
+          <div class="field">
+
+            <label>Phone Number</label>
+
+            <input
+              type="tel"
+              id="phone_number"
+              placeholder="Enter phone number"
+              maxlength="15"
+            >
+
+          </div>
+
+
+          <div class="field">
+
+            <label>Email Address</label>
+
+            <input
+              type="email"
+              id="email"
+              placeholder="example@email.com"
+            >
+
+          </div>
+
+
+          <div class="field full">
+
+            <label>Address</label>
+
+            <textarea
+              id="address"
+              placeholder="Enter complete address"
+            ></textarea>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- HOBBIES -->
+
+      <div class="section">
+
+        <div class="section-header">
+
+          <div class="section-icon">
+            🎯
+          </div>
+
+          <div>
+            <h2>Interests & Hobbies</h2>
+            <p>Select everything that applies</p>
+          </div>
+
+        </div>
+
+
+        <div class="hobbies">
+
+
+          <div class="hobby">
+
+            <input
+              type="checkbox"
+              id="coding"
+              value="Coding"
+            >
+
+            <label for="coding">
+              💻 Coding
+            </label>
+
+          </div>
+
+
+          <div class="hobby">
+
+            <input
+              type="checkbox"
+              id="sports"
+              value="Sports"
+            >
+
+            <label for="sports">
+              ⚽ Sports
+            </label>
+
+          </div>
+
+
+          <div class="hobby">
+
+            <input
+              type="checkbox"
+              id="music"
+              value="Music"
+            >
+
+            <label for="music">
+              🎵 Music
+            </label>
+
+          </div>
+
+
+          <div class="hobby">
+
+            <input
+              type="checkbox"
+              id="drawing"
+              value="Drawing"
+            >
+
+            <label for="drawing">
+              🎨 Drawing
+            </label>
+
+          </div>
+
+
+          <div class="hobby">
+
+            <input
+              type="checkbox"
+              id="reading"
+              value="Reading"
+            >
+
+            <label for="reading">
+              📚 Reading
+            </label>
+
+          </div>
+
+
+          <div class="hobby">
+
+            <input
+              type="checkbox"
+              id="gaming"
+              value="Gaming"
+            >
+
+            <label for="gaming">
+              🎮 Gaming
+            </label>
+
+          </div>
+
+        </div>
+
+
+        <input
+          class="other-hobby"
+          type="text"
+          id="other_hobby"
+          placeholder="Other hobby or interest..."
+        >
+
+      </div>
+
+
+
+      <!-- SUBMIT -->
+
+      <div class="submit-area">
+
+        <button
+          type="submit"
+          id="submitBtn"
+        >
+          Submit Registration
+        </button>
+
+        <div id="message"></div>
+
+      </div>
+
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<footer>
+  Student Portal • Registration Form
+</footer>
+
+
+
+<script>
+
+  /* =========================================
+     SUPABASE CONFIG
+  ========================================= */
+
+  const SUPABASE_URL =
+    "https://xlfmsojmnogfsjiyulik.supabase.co";
+
+  const SUPABASE_ANON_KEY =
+    "sb_publishable_zWFdwXlSGv4hs2w3gcRYXg_ramnVFAB";
+
+
+  const { createClient } = supabase;
+
+  const db = createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+  );
+
+
+  /* =========================================
+     FORM
+  ========================================= */
+
+  const form =
+    document.getElementById("studentForm");
+
+  const submitBtn =
+    document.getElementById("submitBtn");
+
+  const message =
+    document.getElementById("message");
+
+
+  form.addEventListener(
+    "submit",
+    async function(event) {
+
+      event.preventDefault();
+
+
+      submitBtn.disabled = true;
+
+      submitBtn.textContent =
+        "Submitting...";
+
+
+      message.className = "";
+
+      message.style.display = "none";
+
+
+      /* GET GENDER */
+
+      const selectedGender =
+        document.querySelector(
+          'input[name="gender"]:checked'
+        );
+
+      const gender =
+        selectedGender
+          ? selectedGender.value
+          : null;
+
+
+      /* GET HOBBIES */
+
+      const selectedHobbies =
+        document.querySelectorAll(
+          ".hobby input:checked"
+        );
+
+      let hobbies = [];
+
+
+      selectedHobbies.forEach(
+        function(item) {
+
+          hobbies.push(item.value);
+
+        }
+      );
+
+
+      /* OTHER HOBBY */
+
+      const other =
+        document
+          .getElementById("other_hobby")
+          .value
+          .trim();
+
+
+      if (other) {
+        hobbies.push(other);
+      }
+
+
+      /* STUDENT OBJECT */
+
+      const studentData = {
+
+        student_name:
+          document
+            .getElementById("student_name")
+            .value
+            .trim(),
+
+        standard:
+          document
+            .getElementById("standard")
+            .value,
+
+        division:
+          document
+            .getElementById("division")
+            .value
+            .trim(),
+
+        gender:
+          gender,
+
+        date_of_birth:
+          document
+            .getElementById("date_of_birth")
+            .value || null,
+
+        phone_number:
+          document
+            .getElementById("phone_number")
+            .value
+            .trim(),
+
+        email:
+          document
+            .getElementById("email")
+            .value
+            .trim(),
+
+        address:
+          document
+            .getElementById("address")
+            .value
+            .trim(),
+
+        interests:
+          hobbies.join(", ")
+
+      };
+
+
+      /* =========================================
+         SEND TO SUPABASE
+      ========================================= */
+
+      const {
+        data,
+        error
+      } = await db
+        .from("students")
+        .insert([studentData])
+        .select();
+
+
+      /* ERROR */
+
+      if (error) {
+
+        console.error(error);
+
+        message.textContent =
+          "❌ Submission failed. Please try again.";
+
+        message.className =
+          "error";
+
+
+        submitBtn.disabled = false;
+
+        submitBtn.textContent =
+          "Submit Registration";
+
+        return;
+      }
+
+
+      /* SUCCESS */
+
+      message.textContent =
+        "✅ Registration submitted successfully!";
+
+      message.className =
+        "success";
+
+
+      form.reset();
+
+
+      submitBtn.disabled = false;
+
+      submitBtn.textContent =
+        "Submit Registration";
+
+
+      /* SCROLL TO MESSAGE */
+
+      message.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+
+    }
+
+  );
+
+</script>
+
+</body>
+</html>
